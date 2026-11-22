@@ -1,34 +1,37 @@
 {
+  // Налаштування компілятора TypeScript
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
+    "target": "ES2017", // Цільова версія JavaScript при компіляції
+    "lib": ["dom", "dom.iterable", "esnext"], // Вбудовані типи для DOM браузера та сучасного JS
+    "allowJs": true, // Дозволяємо використовувати звичайні .js файли разом із .ts
+    "skipLibCheck": true, // Пропускаємо перевірку типів усередині сторонніх бібліотек (прискорює збірку)
+    "strict": true, // Вмикаємо суворий режим перевірки типів TypeScript
+    "noEmit": true, // Не створюємо .js файли напряму (збірку виконує Next.js)
+    "esModuleInterop": true, // Сумісність імпортів між CommonJS та ES-модулями
+    "module": "esnext", // Використовуємо сучасний стандарт ES-модулів
+    "moduleResolution": "bundler", // Алгоритм пошуку модулів для сучасних збирачів (Turbopack/Webpack)
+    "resolveJsonModule": true, // Дозволяємо імпортувати .json файли як модулі
+    "isolatedModules": true, // Гарантуємо, що кожен файл може компілюватися незалежно
+    "jsx": "react-jsx", // Сучасна трансформація JSX без ручного імпорту React
+    "incremental": true, // Кешуємо результати перевірки типів для швидших повторних збірок
+    "plugins": [ // Плагіни TypeScript для редактора коду
       {
-        "name": "next"
+        "name": "next" // Офіційний TypeScript-плагін Next.js для підказок і перевірок
       }
     ],
-    "paths": {
-      "@/*": ["./src/*"]
+    "paths": { // Псевдоніми шляхів (alias) для коротких імпортів
+      "@/*": ["./src/*"] // Символ @/ веде напряму в папку src/
     }
   },
+  // Список файлів і шаблонів, які перевіряє TypeScript
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "next-env.d.ts", // Автогенеровані типи Next.js
+    "**/*.ts", // Усі TypeScript-файли проєкту
+    "**/*.tsx", // Усі TypeScript-файли з JSX-розміткою
+    ".next/types/**/*.ts", // Згенеровані типи маршрутів Next.js (build)
+    ".next/dev/types/**/*.ts", // Згенеровані типи маршрутів Next.js (dev)
+    "**/*.mts" // Модульні TypeScript-файли (.mts)
   ],
-  "exclude": ["node_modules"]
+  // Папки, які виключено з перевірки TypeScript
+  "exclude": ["node_modules"] // Не перевіряємо встановлені npm-пакети
 }
