@@ -87,6 +87,12 @@ export function CatalogClient({ products }: CatalogClientProps) {
     return filtered;
   }, [products, searchQuery, selectedCategory, sortOrder]); // Масив залежностей для useMemo
 
+  // Перевіряємо, чи активний зараз хоча б один фільтр (пошук, категорія або сортування)
+  const hasActiveFilters =
+    searchQuery.trim() !== "" || // Чи введено текст у поле пошуку
+    selectedCategory !== "Усі" || // Чи обрано конкретну категорію замість «Усі»
+    sortOrder !== "default"; // Чи змінено порядок сортування за ціною
+
   // Обробник скидання пошуку, фільтра категорій та сортування до початкових значень
   const handleResetFilters = () => {
     setSearchQuery(""); // Очищаємо поле пошуку
@@ -202,20 +208,52 @@ export function CatalogClient({ products }: CatalogClientProps) {
             })}
           </div> {/* Закриваємо групу кнопок категорій */}
 
-          {/* Лічильник кількості знайдених товарів із правильним відмінюванням і бейджем */}
-          <div
-            aria-live="polite" // Повідомляє скрінрідерам про динамічну зміну кількості знайдених товарів
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-50/80 px-3.5 py-2 text-sm text-slate-600 ring-1 ring-inset ring-indigo-600/15" // Стилі бейджа лічильника
-          >
-            {/* Текстовий префікс лічильника */}
-            <span>Знайдено:</span>
-            {/* Виділяємо жирним і акцентним кольором кількість знайдених товарів із правильним словом */}
-            <span className="font-semibold text-indigo-700">
-              {filteredProducts.length} {getProductsWord(filteredProducts.length)}
-            </span> {/* Закриваємо число знайдених товарів */}
-            {/* Показуємо загальну кількість товарів у каталозі */}
-            <span className="text-slate-400">з {products.length}</span>
-          </div> {/* Закриваємо блок лічильника результатів */}
+          {/* Права частина нижнього рядка: лічильник знайдених товарів і кнопка скидання фільтрів */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Лічильник кількості знайдених товарів із правильним відмінюванням і бейджем */}
+            <div
+              aria-live="polite" // Повідомляє скрінрідерам про динамічну зміну кількості знайдених товарів
+              className="inline-flex items-center gap-2 rounded-xl bg-indigo-50/80 px-3.5 py-2 text-sm text-slate-600 ring-1 ring-inset ring-indigo-600/15" // Стилі бейджа лічильника
+            >
+              {/* Текстовий префікс лічильника */}
+              <span>Знайдено:</span>
+              {/* Виділяємо жирним і акцентним кольором кількість знайдених товарів із правильним словом */}
+              <span className="font-semibold text-indigo-700">
+                {filteredProducts.length} {getProductsWord(filteredProducts.length)}
+              </span> {/* Закриваємо число знайдених товарів */}
+              {/* Показуємо загальну кількість товарів у каталозі */}
+              <span className="text-slate-400">з {products.length}</span>
+            </div> {/* Закриваємо блок лічильника результатів */}
+
+            {/* Кнопка скидання всіх фільтрів (пошуку, категорії та сортування) */}
+            <button
+              type="button" // Звичайна кнопка (не відправляє форму)
+              onClick={handleResetFilters} // Скидаємо всі фільтри при натисканні
+              disabled={!hasActiveFilters} // Блокуємо кнопку, якщо жоден фільтр не застосовано
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-sm font-medium transition ${ // Базові стилі кнопки скидання
+                hasActiveFilters // Перевіряємо, чи є активні фільтри
+                  ? "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 cursor-pointer" // Активний стан кнопки
+                  : "border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed" // Неактивний (вимкнений) стан кнопки
+              }`} // Завершення динамічного className кнопки скидання
+            >
+              {/* SVG-іконка оновлення/скидання */}
+              <svg
+                aria-hidden="true" // Декоративна іконка
+                viewBox="0 0 24 24" // Координати SVG
+                fill="none" // Без заливки
+                stroke="currentColor" // Колір лінії успадковується від тексту
+                strokeWidth={2} // Товщина лінії
+                className="h-4 w-4" // Розмір іконки 16x16px
+              >
+                {/* Стрілка кругового скидання */}
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" strokeLinecap="round" strokeLinejoin="round" />
+                {/* Наконечник стрілки */}
+                <path d="M3 3v5h5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg> {/* Закриваємо іконку скидання */}
+              {/* Текст на кнопці скидання */}
+              Скинути фільтри
+            </button> {/* Закриваємо кнопку скидання фільтрів */}
+          </div> {/* Закриваємо праву частину нижнього рядка */}
         </div> {/* Закриваємо нижній рядок панелі фільтрів */}
       </div> {/* Закриваємо панель пошуку та фільтрації */}
 
