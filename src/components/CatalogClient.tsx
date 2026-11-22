@@ -17,8 +17,8 @@ interface CatalogClientProps {
 // Тип для обраного фільтра категорій: або «Усі», або одна з конкретних категорій
 type CategoryFilter = "Усі" | ProductCategory;
 
-// Тип для напрямку сортування товарів за ціною
-type PriceSortOrder = "default" | "asc" | "desc";
+// Тип для порядку сортування товарів (за замовчуванням, за ціною або спочатку акційні)
+type SortOrder = "default" | "asc" | "desc" | "sale";
 
 // Допоміжна функція для правильного відмінювання слова «товар» українською мовою
 function getProductsWord(count: number): string {
@@ -48,8 +48,8 @@ export function CatalogClient({ products }: CatalogClientProps) {
   // Стан для активної категорії фільтрації (початково вибрано «Усі»)
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("Усі"); // Вказуємо тип стану CategoryFilter і початкове значення
-  // Стан для обраного порядку сортування за ціною (початково без сортування)
-  const [sortOrder, setSortOrder] = useState<PriceSortOrder>("default");
+  // Стан для обраного порядку сортування (початково без сортування)
+  const [sortOrder, setSortOrder] = useState<SortOrder>("default");
 
   // Формуємо повний масив кнопок фільтра: «Усі» + усі категорії товарів
   const categories: CategoryFilter[] = ["Усі", ...PRODUCT_CATEGORIES];
@@ -82,6 +82,11 @@ export function CatalogClient({ products }: CatalogClientProps) {
     if (sortOrder === "desc") {
       return [...filtered].sort((a, b) => b.price - a.price); // Повертаємо копію масиву, відсортовану за спаданням ціни
     } // Завершення перевірки sortOrder === "desc"
+
+    // Якщо обрано «Спочатку акційні» — піднімаємо товари зі знижкою (isOnSale: true) на початок списку
+    if (sortOrder === "sale") {
+      return [...filtered].sort((a, b) => Number(b.isOnSale) - Number(a.isOnSale)); // true (1) йде перед false (0)
+    } // Завершення перевірки sortOrder === "sale"
 
     // За замовчуванням повертаємо відфільтровані товари у початковому порядку
     return filtered;
@@ -159,11 +164,11 @@ export function CatalogClient({ products }: CatalogClientProps) {
             )}
           </div> {/* Закриваємо обгортку поля пошуку */}
 
-          {/* Випадаючий список для вибору сортування товарів за ціною */}
+          {/* Випадаючий список для вибору сортування товарів */}
           <select
             value={sortOrder} // Прив'язуємо обране значення до стану sortOrder
-            onChange={(e) => setSortOrder(e.target.value as PriceSortOrder)} // Оновлюємо порядок сортування при виборі опції
-            aria-label="Сортування за ціною" // Доступний підпис списку для скрінрідерів
+            onChange={(e) => setSortOrder(e.target.value as SortOrder)} // Оновлюємо порядок сортування при виборі опції
+            aria-label="Сортування товарів" // Доступний підпис списку для скрінрідерів
             className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700 transition cursor-pointer focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 sm:w-64" // Стилі селекта з фіксованою шириною на широких екранах
           >
             {/* Опція без сортування (початковий порядок) */}
@@ -172,6 +177,8 @@ export function CatalogClient({ products }: CatalogClientProps) {
             <option value="asc">Ціна: від дешевших</option>
             {/* Опція сортування від найвищої ціни до найнижчої */}
             <option value="desc">Ціна: від дорожчих</option>
+            {/* Опція сортування: спочатку товари з позначкою «Акція» */}
+            <option value="sale">Спочатку акційні</option>
           </select> {/* Закриваємо список сортування */}
         </div> {/* Закриваємо верхній рядок панелі */}
 
