@@ -27,15 +27,26 @@ export function ProductCard({ product }: ProductCardProps) {
     <article className="group flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
       {/* Верхній блок картки: бейджі, назва та опис */}
       <div>
-        {/* Рядок із бейджем категорії зліва та статусом наявності справа */}
-        <div className="mb-4 flex items-center justify-between gap-2">
-          {/* Бейдж категорії товару з динамічними кольорами з categoryStyles */}
-          <span
-            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${categoryStyles[product.category]}`} // Підставляємо класи відповідно до категорії
-          >
-            {/* Виводимо назву категорії товару */}
-            {product.category}
-          </span> {/* Закриваємо бейдж категорії */}
+        {/* Рядок із бейджами категорії й акції зліва та статусом наявності справа */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          {/* Ліва група бейджів: категорія та позначка «Акція» */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Бейдж категорії товару з динамічними кольорами з categoryStyles */}
+            <span
+              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${categoryStyles[product.category]}`} // Підставляємо класи відповідно до категорії
+            >
+              {/* Виводимо назву категорії товару */}
+              {product.category}
+            </span> {/* Закриваємо бейдж категорії */}
+
+            {/* Якщо товар зі знижкою — показуємо яскраву позначку «Акція» */}
+            {product.isOnSale && (
+              // Бейдж «Акція» для акційних товарів
+              <span className="inline-flex items-center rounded-full bg-rose-600 px-2.5 py-1 text-xs font-semibold text-white shadow-xs">
+                Акція
+              </span> // Закриваємо бейдж «Акція»
+            )}
+          </div> {/* Закриваємо ліву групу бейджів */}
 
           {/* Бейдж статусу наявності (зелений якщо є, червоний якщо немає) */}
           <span
@@ -75,11 +86,25 @@ export function ProductCard({ product }: ProductCardProps) {
         <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
           Ціна
         </span> {/* Закриваємо підпис «Ціна» */}
-        {/* Відформатована ціна товару жирним шрифтом */}
-        <span className="text-xl font-bold tracking-tight text-slate-900">
-          {/* Форматуємо число price у формат гривні */}
-          {formatPrice(product.price)}
-        </span> {/* Закриваємо блок ціни */}
+        {/* Блок із поточною ціною та (за наявності акції) закресленою старою ціною */}
+        <div className="flex items-baseline gap-2">
+          {/* Якщо товар бере участь в акції та має стару ціну — показуємо її закресленою */}
+          {product.isOnSale && product.oldPrice && (
+            // Закреслена ціна до знижки
+            <span className="text-sm text-slate-400 line-through">
+              {formatPrice(product.oldPrice)}
+            </span> // Закриваємо блок старої ціни
+          )}
+          {/* Відформатована поточна ціна товару жирним шрифтом (червоним для акційних товарів) */}
+          <span
+            className={`text-xl font-bold tracking-tight ${ // Базовий розмір і товщина тексту ціни
+              product.isOnSale ? "text-rose-600" : "text-slate-900" // Акцентний колір для ціни зі знижкою
+            }`} // Завершення динамічного className ціни
+          >
+            {/* Форматуємо число price у формат гривні */}
+            {formatPrice(product.price)}
+          </span> {/* Закриваємо блок ціни */}
+        </div> {/* Закриваємо контейнер цін */}
       </div> {/* Закриваємо нижній блок картки */}
     </article> // Закриваємо кореневий тег картки article
   ); // Кінець повернення JSX

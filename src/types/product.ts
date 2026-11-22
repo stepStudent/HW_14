@@ -12,5 +12,7 @@ export interface Product {
   price: number; // Ціна товару в гривнях (число)
   category: ProductCategory; // Категорія товару (одне зі значень типу ProductCategory)
   inStock: boolean; // Статус наявності: true — в наявності, false — немає в наявності
+  isOnSale: boolean; // Чи бере товар участь в акції (зі знижкою)
+  oldPrice?: number; // Необов'язкова стара ціна до знижки (у гривнях)
   description: string; // Короткий опис характеристик товару
 } // Завершення оголошення інтерфейсу Product
