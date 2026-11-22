@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Catalog
 
-## Getting Started
+Інтерактивний каталог товарів, створений на **Next.js (App Router)** із використанням **TypeScript** та **Tailwind CSS**.
 
-First, run the development server:
+## Можливості проєкту
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Каталог товарів**: 8 товарів у 4 категоріях (`Електроніка`, `Аудіо`, `Смарт-дім`, `Аксесуари`) із назвою, описом, ціною в гривнях та статусом наявності (`В наявності` / `Немає в наявності`).
+- **Окремий компонент картки (`ProductCard`)**: відображає бейдж категорії, статус наявності, опис та відформатовану ціну.
+- **Акційні товари**: позначка **«Акція»**, закреслена стара ціна та акцентна акційна ціна для товарів зі знижкою.
+- **Пошук за назвою**: миттєвий пошук без урахування регістру з кнопкою швидкого очищення поля.
+- **Фільтрація за категоріями**: зручне перемикання між усіма товарами та окремими категоріями.
+- **Сортування товарів**:
+  - за замовчуванням;
+  - ціна: від дешевших;
+  - ціна: від дорожчих;
+  - спочатку акційні.
+- **Лічильник знайдених товарів**: динамічно показує кількість результатів із правильним українським відмінюванням (`1 товар`, `2 товари`, `8 товарів`).
+- **Скидання фільтрів**: кнопка **«Скинути фільтри»** у панелі керування та у порожньому стані.
+- **Порожній стан**: повідомлення **«Товарів не знайдено»**, якщо за пошуком або фільтрами немає збігів.
+- **Сторінка «Про магазин» (`/about`)**: окремий маршрут з описом магазину, перевагами, контактами, графіком роботи та навігацією назад до каталогу.
+- **Типізація TypeScript**: структура товару та категорій описана через `interface Product` і `type ProductCategory`.
+
+## Технології
+
+- [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
+- [React 19](https://react.dev/)
+- [TypeScript 5](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [ESLint 9](https://eslint.org/)
+
+## Структура проєкту
+
+```text
+Task_1/
+├── src/
+│   ├── app/
+│   │   ├── about/
+│   │   │   └── page.tsx         # Сторінка «Про магазин» (/about)
+│   │   ├── globals.css          # Глобальні стилі та підключення Tailwind CSS
+│   │   ├── layout.tsx           # Кореневий макет, шрифти та метадані
+│   │   └── page.tsx             # Головна сторінка каталогу (/)
+│   ├── components/
+│   │   ├── CatalogClient.tsx    # Пошук, фільтрація, сортування, лічильник і сітка товарів
+│   │   └── ProductCard.tsx      # Компонент картки окремого товару
+│   ├── data/
+│   │   └── products.ts          # Дані товарів та список категорій
+│   └── types/
+│       └── product.ts           # TypeScript-типи (Product, ProductCategory)
+├── next.config.ts               # Конфігурація Next.js
+├── eslint.config.mjs            # Конфігурація ESLint
+├── tsconfig.json                # Конфігурація TypeScript
+└── package.json                 # Залежності та npm-скрипти
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Запуск проєкту локально
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Встановіть залежності:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Запустіть сервер розробки:
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+3. Відкрийте у браузері:
+   - Головна сторінка каталогу: [http://localhost:3000](http://localhost:3000)
+   - Сторінка «Про магазин»: [http://localhost:3000/about](http://localhost:3000/about)
 
-To learn more about Next.js, take a look at the following resources:
+## Корисні команди
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev    # Запуск у режимі розробки
+npm run lint   # Перевірка коду лінтером ESLint
+npm run build  # Перевірка TypeScript та production-збірка
+npm run start  # Запуск зібраного production-сервера
+```
